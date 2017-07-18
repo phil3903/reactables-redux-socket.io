@@ -1,5 +1,5 @@
-import { subscribe, unsubscribe, emit, connect,  } from '../../lib/events'
-import { testAction, buttonClick } from '../actions'
+import {subscribe, unsubscribe, emit, connect } from '../../lib/events'
+import {testAction, buttonClick} from '../actions'
 
 const BUTTON_WAS_CLICKED = 'button:wasClicked'
 
@@ -10,7 +10,7 @@ const onConnect =()=> {
  Subscribe events
  */
 const STATUS_CHANGED = 'event:statusChanged'
-const statusChanged =(eventData, store) =>{
+const statusChanged = (eventData, store, socket) =>{
   const { dispatch } = store
   dispatch(testAction(eventData))
 }
@@ -25,20 +25,18 @@ const statusChanged =(eventData, store) =>{
  */
 const shouldSubscribe =(store, action)=>{
   const state = store.getState()
-  return state.main < 2
+  return state.main < 1
 }
 
 const shouldUnsubscribe = (store, action)=>{
   const state = store.getState()
-
-  console.log(state.main)
-  return state.main >= 2
+  return state.main >= 1
 }
 
 export const events = [
-  connect(onConnect),
-  subscribe(STATUS_CHANGED, statusChanged, shouldSubscribe),
-  //subscribe(STATUS_CHANGED, (eventData)=> console.log(eventData)),
+  //connect(onConnect),
+  subscribe(STATUS_CHANGED, statusChanged),
+  subscribe(STATUS_CHANGED, (eventData)=> console.log(eventData, 'secondary')),
   unsubscribe(STATUS_CHANGED, statusChanged, shouldUnsubscribe),
   emit(BUTTON_WAS_CLICKED, buttonClick)
 ]

@@ -49,7 +49,7 @@ app.use((req, res, next)=>{
 
 
 //socket
-const INTERVAL = 5000
+const INTERVAL = 3000
 io.on('connection', socket => {
   console.log('a user connected')
   setInterval(()=> {socket.emit('event:statusChanged', {status: 1234})}, INTERVAL)
