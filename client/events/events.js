@@ -15,6 +15,10 @@ const statusChanged = (eventData, store, socket) =>{
   dispatch(testAction(eventData))
 }
 
+const secondaryHandler =(eventData, store, socket)=>{
+  console.log(eventData, 'secondary')
+}
+
 /**
  * Emitters
  */
@@ -28,15 +32,21 @@ const shouldSubscribe =(store, action)=>{
   return state.main < 1
 }
 
-const shouldUnsubscribe = (store, action)=>{
+const shouldUnsubscribe = (store, action) =>{
   const state = store.getState()
-  return state.main >= 1
+  return state.main >= 3
+}
+
+const secondaryShouldUnsubscribe =(store) =>{
+  const state = store.getState()
+  return state.main >= 2
 }
 
 export const events = [
-  //connect(onConnect),
+  connect(onConnect),
   subscribe(STATUS_CHANGED, statusChanged),
-  subscribe(STATUS_CHANGED, (eventData)=> console.log(eventData, 'secondary')),
+  subscribe(STATUS_CHANGED, secondaryHandler),
   unsubscribe(STATUS_CHANGED, statusChanged, shouldUnsubscribe),
+  unsubscribe(STATUS_CHANGED, secondaryHandler, secondaryShouldUnsubscribe),
   emit(BUTTON_WAS_CLICKED, buttonClick)
 ]

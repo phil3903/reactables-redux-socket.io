@@ -11,7 +11,6 @@ function main( state = initialState, action ) {
   }
 }
 
-
 export default combineReducers({
   main
 })
