@@ -1,8 +1,6 @@
 import {subscribe, unsubscribe, emit, connect } from '../../lib/events'
 import {testAction, clickButton, BUTTON_CLICK} from '../actions'
 
-const BUTTON_WAS_CLICKED = 'button:wasClicked'
-
 const onConnect =()=> {
   console.log('connected to server')
 }
@@ -24,6 +22,7 @@ const secondaryHandler =(eventData, store, socket)=>{
  * Emitters
  */
 
+const BUTTON_WAS_CLICKED = 'button:wasClicked'
 const buttonClick = (store, action)=>{
   return action.data
 }
