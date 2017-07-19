@@ -1,5 +1,5 @@
 import {subscribe, unsubscribe, emit, connect } from '../../lib/events'
-import {testAction, buttonClick} from '../actions'
+import {testAction, clickButton, BUTTON_CLICK} from '../actions'
 
 const BUTTON_WAS_CLICKED = 'button:wasClicked'
 
@@ -13,6 +13,7 @@ const STATUS_CHANGED = 'event:statusChanged'
 const statusChanged = (eventData, store, socket) =>{
   const { dispatch } = store
   dispatch(testAction(eventData))
+  dispatch(clickButton(123))
 }
 
 const secondaryHandler =(eventData, store, socket)=>{
@@ -22,6 +23,10 @@ const secondaryHandler =(eventData, store, socket)=>{
 /**
  * Emitters
  */
+
+const buttonClick = (store, action)=>{
+  return action.data
+}
 
 
 /**
@@ -42,11 +47,15 @@ const secondaryShouldUnsubscribe =(store) =>{
   return state.main >= 2
 }
 
+const shouldEmit =(store, action)=>{
+  return action.type === BUTTON_CLICK
+}
+
 export const events = [
   connect(onConnect),
   subscribe(STATUS_CHANGED, statusChanged),
   subscribe(STATUS_CHANGED, secondaryHandler),
   unsubscribe(STATUS_CHANGED, statusChanged, shouldUnsubscribe),
   unsubscribe(STATUS_CHANGED, secondaryHandler, secondaryShouldUnsubscribe),
-  emit(BUTTON_WAS_CLICKED, buttonClick)
+  emit(BUTTON_WAS_CLICKED,  buttonClick, shouldEmit)
 ]

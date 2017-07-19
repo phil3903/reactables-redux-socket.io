@@ -53,7 +53,12 @@ const INTERVAL = 3000
 io.on('connection', socket => {
   console.log('a user connected')
   setInterval(()=> {socket.emit('event:statusChanged', {status: 1234})}, INTERVAL)
+
+
+  socket.on('button:wasClicked', data => console.log(data))
 })
+
+
 
 
 const server = http.listen(PORT, () =>{
